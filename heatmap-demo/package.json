@@ -1,0 +1,22 @@
+{
+  "name": "vue-heatmap-demo",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@amcharts/amcharts5": "^5.12.2",
+    "@amcharts/amcharts5-geodata": "^5.1.4",
+    "axios": "^1.9.0",
+    "uikit": "^3.23.7",
+    "vue": "^3.5.13"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.2.3",
+    "vite": "^6.3.5"
+  }
+}

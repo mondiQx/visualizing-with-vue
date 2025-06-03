@@ -1,0 +1,59 @@
+const fetchPokemonByType = async (type) => {
+  const res = await axios.get(`https://pokeapi.co/api/v2/type/${type}`)
+  const pokemons = res.data.pokemon.slice(0, 10)  // Limit to 10
+  const details = await Promise.all(
+    pokemons.map(p => axios.get(p.pokemon.url))
+  )
+  return details.map(d => ({
+    name: d.data.name,
+    // Uncomment exactly one of these to choose your metric
+    // metric: d.data.base_experience || 0,
+    metric: d.data.weight || 0,
+    // metric: d.data.height || 0
+  }))
+}
+
+const renderChart = async () => {
+  const data = await fetchPokemonByType(props.type)
+  const labels = data.map(d => d.name)
+  const dataToShow = data.map(d => d.metric)
+
+  const pieColors = [
+    'rgba(255, 99, 132, 0.5)',
+    'rgba(54, 162, 235, 0.5)',
+    'rgba(255, 206, 86, 0.5)',
+    'rgba(75, 192, 192, 0.5)',
+    'rgba(153, 102, 255, 0.5)',
+    'rgba(255, 159, 64, 0.5)',
+    'rgba(199, 199, 199, 0.5)',
+    'rgba(83, 102, 255, 0.5)',
+    'rgba(255, 102, 255, 0.5)',
+    'rgba(102, 255, 204, 0.5)'
+  ]
+
+  if (chart) chart.destroy()
+  chart = new Chart(canvasEl.value, {
+    // Change chart type here
+    // type: 'pie',
+    type: 'bar',
+    // type: 'line',
+
+    data: {
+      labels,
+      datasets: [{
+        label: `Metric of ${props.type} type Pokémon`, // Adjust as needed
+        data: dataToShow,
+        backgroundColor: isPie ? pieColors.slice(0, dataToShow.length) : 'rgba(255, 99, 132, 0.5)',
+        borderColor: isPie ? 'white' : 'rgba(255, 99, 132, 1)',
+        // backgroundColor: 'rgba(255, 99, 132, 0.5)',
+        // borderColor: 'rgba(255, 99, 132, 1)',
+
+        borderWidth: 1
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { display: true } }
+    }
+  })
+}
